@@ -34,6 +34,8 @@ public class NailDesign : MonoBehaviour
         for(int i=0; i < lerpNum + 1; i++)
         {
             var r = Vector2.Lerp(p, q, i * (1.0f / lerpNum));
+            Debug.Log(r.x);
+            Debug.Log(r.y);
             Draw(r);
         }
     }
@@ -63,8 +65,10 @@ public class NailDesign : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100.0f))
+            if (Physics.Raycast(ray, out hit, 1500.0f))
             {
+                // タップにぶつかったらその場所を出力
+                Debug.Log(hit.collider.gameObject.transform.position);
                 var drawPoint = new Vector2(hit.textureCoord.x * drawTexture.width, hit.textureCoord.y * drawTexture.height);
                 if (touching) {
                     DrawLine(prevPoint, drawPoint);
@@ -78,6 +82,8 @@ public class NailDesign : MonoBehaviour
             }else
             {
                 touching = false;
+                Debug.Log("nothing");
+
             }
             drawTexture.SetPixels(buffer);
             drawTexture.Apply();
