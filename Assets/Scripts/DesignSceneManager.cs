@@ -14,10 +14,19 @@ public class DesignSceneManager : MonoBehaviour
     string nextscene;
     [SerializeField] string titlescenename;
     [SerializeField] string tryscenename;
+    [SerializeField] GameObject mainpanel;
+    [SerializeField] GameObject designpanel;
+
+    GameObject plane;
+    Texture texture;
 
     // Start is called before the first frame update
     void Start()
     {
+        mainpanel.SetActive(true);
+        designpanel.SetActive(false);
+        // 貼り付けるテクスチャのシェーダーをセット
+
         backButton.onClick.AddListener(() =>
        {
             nextscene = titlescenename;
@@ -35,9 +44,25 @@ public class DesignSceneManager : MonoBehaviour
         SceneManager.LoadScene(nextscene);
     }
 
-    void OnDestroy()
-   {
-    //    alertButton.onClick.RemoveAllListeners();
-   }
+    public void CalldesignPlane(Button b){
+        var img  = b.image;
+        // ボタンのimageを書き込むテキストにセットする。
 
+        mainpanel.SetActive(false);
+        designpanel.SetActive(true);
+        SetTexture(img);
+    }
+
+    public void BackmainPanel(){
+        mainpanel.SetActive(true);
+        designpanel.SetActive(false);
+    }
+
+    private void SetTexture(Image img){
+        // 受け取ったImageをPlaneにセット
+        texture = img.mainTexture;
+        // Debug.Log(texture);
+        Texture t = GameObject.Find("Plane").GetComponent<Renderer>().material.mainTexture;
+        //  = texture;
+    }
 }
