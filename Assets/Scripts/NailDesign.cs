@@ -9,6 +9,10 @@ public class NailDesign : MonoBehaviour
     bool touching = false;
     Vector2 prevPoint;
 
+    DesignSceneManager designSceneManager;
+    GameObject pl;
+
+
 
     void Start()
     {
@@ -16,7 +20,7 @@ public class NailDesign : MonoBehaviour
         if(mainTexture == null){
             Debug.Log("null");
         }else{
-            Debug.Log(mainTexture.height);
+            Debug.Log("texture name is" + mainTexture.name);
         }
 
         Color[] pixels = mainTexture.GetPixels();
@@ -26,6 +30,14 @@ public class NailDesign : MonoBehaviour
 
         drawTexture = new Texture2D(mainTexture.width, mainTexture.height, TextureFormat.RGBA32, false);
         drawTexture.filterMode = FilterMode.Point;
+
+        pl = GameObject.Find("Plane");
+        Debug.Log(pl.name);
+        designSceneManager = pl.GetComponent<DesignSceneManager>();
+        Debug.Log(designSceneManager.name);
+        pl.GetComponent<DesignSceneManager>().test();
+
+
     }
 
     public void DrawLine(Vector2 p, Vector2 q)
@@ -34,8 +46,6 @@ public class NailDesign : MonoBehaviour
         for(int i=0; i < lerpNum + 1; i++)
         {
             var r = Vector2.Lerp(p, q, i * (1.0f / lerpNum));
-            Debug.Log(r.x);
-            Debug.Log(r.y);
             Draw(r);
         }
     }
@@ -61,6 +71,30 @@ public class NailDesign : MonoBehaviour
 
     void Update()
     {
+        // designSceneManager.test();
+        // Debug.Log("a is " + designSceneManager.a);
+
+        // bool b = designSceneManager.changepanel;
+        // Debug.Log(designSceneManager.changepanel);
+        // if(designSceneManager.changepanel){
+        //     Texture2D mainTexture = (Texture2D)GetComponent<Renderer>().material.mainTexture;
+        //     if(mainTexture == null){
+        //         Debug.Log("null");
+        //     }else{
+        //         Debug.Log("texture name is" + mainTexture.name);
+        //     }
+
+        //     Color[] pixels = mainTexture.GetPixels();
+
+        //     buffer = new Color[pixels.Length];
+        //     pixels.CopyTo(buffer, 0);
+
+        //     drawTexture = new Texture2D(mainTexture.width, mainTexture.height, TextureFormat.RGBA32, false);
+        //     drawTexture.filterMode = FilterMode.Point;
+
+        //     designSceneManager.changepanel = false;
+        // }
+
         if (Input.GetMouseButton(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -82,7 +116,6 @@ public class NailDesign : MonoBehaviour
             }else
             {
                 touching = false;
-                Debug.Log("nothing");
 
             }
             drawTexture.SetPixels(buffer);

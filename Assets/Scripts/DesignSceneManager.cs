@@ -4,6 +4,8 @@ using UnityEngine;
 
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.IO;
+using UnityEditor;
 
 public class DesignSceneManager : MonoBehaviour
 {
@@ -18,14 +20,29 @@ public class DesignSceneManager : MonoBehaviour
     [SerializeField] GameObject designpanel;
 
     GameObject plane;
-    Texture texture;
+    // Texture texture;
+    string nowbuttonname;
+
+    public bool changepanel = false;
+    public int a = 100;
 
     // Start is called before the first frame update
     void Start()
     {
         mainpanel.SetActive(true);
         designpanel.SetActive(false);
-        // 貼り付けるテクスチャのシェーダーをセット
+
+        // 元の画像をコピー。それぞれのボタンのテクスチャにする。
+        for(int i = 1; i <= 5; i++){
+            string new_path = "Assets/Materials/nail " + (i.ToString())+".png";
+            AssetDatabase.CopyAsset("Assets/Materials/nail_plane.png", new_path);
+            // var tex = AssetDatabase.LoadAssetAtPath<Texture2D>(new_path);
+            Sprite sp = AssetDatabase.LoadAssetAtPath<Sprite>(new_path);
+            var b = GameObject.Find("nali " + i.ToString()).GetComponent<Image>();
+            b.sprite = sp;
+        }
+
+        changepanel = false;
 
         backButton.onClick.AddListener(() =>
        {
@@ -38,6 +55,11 @@ public class DesignSceneManager : MonoBehaviour
             nextscene = tryscenename;
             ChangeScene();
        });
+
+    }
+
+    void Update(){
+        Debug.Log(changepanel);
     }
 
     void ChangeScene(){
@@ -45,24 +67,37 @@ public class DesignSceneManager : MonoBehaviour
     }
 
     public void CalldesignPlane(Button b){
-        var img  = b.image;
         // ボタンのimageを書き込むテキストにセットする。
+        Texture texture = b.image.mainTexture;
+        nowbuttonname = b.name;
 
         mainpanel.SetActive(false);
         designpanel.SetActive(true);
-        SetTexture(img);
+    
+        GameObject.Find("Plane").GetComponent<Renderer>().material.mainTexture = texture; 
+        changepanel = true;
+        Debug.Log("set texture is " + GameObject.Find("Plane").GetComponent<Renderer>().material.mainTexture.name);
     }
 
-    public void BackmainPanel(){
+    public void BackmainPanel(){    
+        
+        // 現在のPlaneのテクスチャをアセット内に保存
+        Texture2D tex = (Texture2D)GameObject.Find("Plane").GetComponent<Renderer>().material.mainTexture;
+        byte[] png = tex.EncodeToPNG();
+        // EditorUtility.SaveFilePanel("Save texture ", "", nowbuttonname+".png", "png");
+        File.WriteAllBytes("Assets/Materials/"+nowbuttonname+".png", png);
+
+        // 保存したテクスチャをボタンのテクスチャにする。
+
         mainpanel.SetActive(true);
         designpanel.SetActive(false);
+
+        GameObject.Find(nowbuttonname).GetComponent<Image>().sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Materials/"+nowbuttonname+".png");
+        Debug.Log("new button image is "+GameObject.Find(nowbuttonname).GetComponent<Image>().sprite.name);
+
     }
 
-    private void SetTexture(Image img){
-        // 受け取ったImageをPlaneにセット
-        texture = img.mainTexture;
-        // Debug.Log(texture);
-        Texture t = GameObject.Find("Plane").GetComponent<Renderer>().material.mainTexture;
-        //  = texture;
+    public void test(){
+        Debug.Log("testtest");
     }
 }
