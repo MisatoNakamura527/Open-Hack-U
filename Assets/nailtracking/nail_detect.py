@@ -14,7 +14,7 @@ import json
 class NailDetection:
     min_confidence = 0.6
     def __init__(self):
-        arg_model = "./nailtracking/model/export_model_008/frozen_inference_graph.pb"
+        arg_model = "./nailtracking/model/frozen_inference_graph.pb"
 
         self.model = tf.Graph()
         with self.model.as_default():
