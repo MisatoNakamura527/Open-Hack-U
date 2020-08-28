@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.IO;
 using UnityEditor;
+using System.Linq;
 
 public class DesignSceneManager : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class DesignSceneManager : MonoBehaviour
     [SerializeField] GameObject designpanel;
     [SerializeField] GameObject toolpanel;
     [SerializeField] GameObject colorpanel;
+    [SerializeField] ToggleGroup toggleGroup;
 
     GameObject plane;
     // Texture texture;
@@ -27,6 +29,8 @@ public class DesignSceneManager : MonoBehaviour
 
     public bool changepanel = false;
     public int a = 100;
+
+    NailDesign nailDesign;
 
     // Start is called before the first frame update
     void Start()
@@ -41,7 +45,7 @@ public class DesignSceneManager : MonoBehaviour
             string new_path = "Assets/Materials/nail " + (i.ToString())+".png";
             AssetDatabase.CopyAsset("Assets/Materials/nail_plane.png", new_path);
             Sprite sp = AssetDatabase.LoadAssetAtPath<Sprite>(new_path);
-            var b = GameObject.Find("nali " + i.ToString()).GetComponent<Image>();
+            var b = GameObject.Find("nail " + i.ToString()).GetComponent<Image>();
             b.sprite = sp;
         }
 
@@ -116,5 +120,16 @@ public class DesignSceneManager : MonoBehaviour
         designpanel.SetActive(!false);
         toolpanel.SetActive(!true);
         colorpanel.SetActive(!true);
+    }
+
+    public void ToolSelect(){
+        // Toolpanelで選んだツールの名前を得る。
+        Toggle tg = toggleGroup.ActiveToggles().First();
+        string name = tg.name;
+        Debug.Log(name);
+    }
+
+    public void ColorSelect(){
+        // Colorを選ぶ
     }
 }

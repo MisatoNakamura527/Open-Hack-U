@@ -13,20 +13,35 @@ public class NailDesign : MonoBehaviour
 
     GameObject pl;
     DesignSceneManager designSceneManager;
+    public enum Tools{
+        pen_small, pen_normal, pen_big,
+        eraser_small, eraser_normal, eraser_big,
+        fill
+    }
+    public Tools tool;
+    public string color_code;
 
-    public int tool;
-    public string color;
 
+    public int brushSize;
+    public static int brush_small = 1, brush_nornal = 3, brush_big = 5;
+    public Color selected_color;
 
     void Start()
-    {
+    {   
 
         pl = GameObject.Find("BackGround");
         designSceneManager = pl.GetComponent<DesignSceneManager>();
+
+        // tool = Tools.pen_normal;
+        tool = Tools.pen_big;
+        brushSize = brush_big;
+        selected_color = Color.red;
+        
     }
 
     public void DrawLine(Vector2 p, Vector2 q)
     {
+        // 線pqを書く
         var lerpNum = 10;
         for(int i=0; i < lerpNum + 1; i++)
         {
@@ -37,21 +52,38 @@ public class NailDesign : MonoBehaviour
 
     public void Draw(Vector2 p)
     {
+        // 点pに点をぬる
         p.x = (int)p.x;
         p.y = (int)p.y;
 
-        var brushSize = 5;
-        var color = Color.black;
+        // 消しゴムならclear
+        Color color = Color.black;
+
+        // if(tool == Tools.eraser_small || tool == Tools.eraser_normal || tool == Tools.eraser_big) color = Color.clear;
+        // else color = selected_color;
+
+        Debug.Log(color);
+
         for (int x = Mathf.Max(0, (int)(p.x - brushSize-1)); x < Mathf.Min(drawTexture.width, (int)(p.x + brushSize+1)); x++)
         {
             for (int y = Mathf.Max(0, (int)(p.y - brushSize-1)); y < Mathf.Min(drawTexture.height, (int)(p.y + brushSize+1)); y++)
             {
                 if (Mathf.Pow(p.x - x,2) + Mathf.Pow(p.y -y, 2) < Mathf.Pow(brushSize, 2))
-                {
+                {   
+                    // if(drawTexture.GetPixel(x, y).a == 1.0f){
+                    //     // 透明のとこはむし
+                    //     continue;
+                    // }
                     buffer.SetValue(color, x + drawTexture.width * y);
                 }
             }
         }
+    }
+
+    void Fillin(){
+        // 塗りつぶし
+        // マテリアルの色を選択された色にする。大丈夫なのかなこれ
+        GetComponent<Renderer>().material.color = selected_color;
     }
 
     void Changedrowtexture(){
@@ -76,20 +108,28 @@ public class NailDesign : MonoBehaviour
             designSceneManager.changepanel = false;
         }
 
+        if(touching){
+            Debug.Log("touched!!!");
+        }
+
+        if(tool == Tools.fill){
+            Fillin();
+        }
+
         if (Input.GetMouseButton(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 1500.0f))
+            // Debug.Log(Physics.Raycast(Input.mousePosition,ray.direction, 100.0f));
+
+            if (Physics.Raycast(ray, out hit, 1000.0f))
             {
                 // タップにぶつかったらその場所を出力
-                Debug.Log(hit.collider.gameObject.transform.position);
+                Debug.Log("butukaru! " + hit.collider.gameObject.transform.position);
                 var drawPoint = new Vector2(hit.textureCoord.x * drawTexture.width, hit.textureCoord.y * drawTexture.height);
                 if (touching) {
                     DrawLine(prevPoint, drawPoint);
-                }
-                else
-                {
+                }else{
                     Draw(drawPoint);
                 }
                 prevPoint = drawPoint;
@@ -97,7 +137,6 @@ public class NailDesign : MonoBehaviour
             }else
             {
                 touching = false;
-
             }
             drawTexture.SetPixels(buffer);
             drawTexture.Apply();
