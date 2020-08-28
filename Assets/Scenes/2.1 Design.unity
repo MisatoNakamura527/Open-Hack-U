@@ -6409,7 +6409,6 @@ GameObject:
   - component: {fileID: 1297460406}
   - component: {fileID: 1297460405}
   - component: {fileID: 1297460404}
-  - component: {fileID: 1297460408}
   - component: {fileID: 1297460407}
   m_Layer: 5
   m_Name: Plane
@@ -6425,7 +6424,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1297460402}
-  m_LocalRotation: {x: -0, y: -0.7071068, z: 0.7071068, w: 0}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: -34}
   m_LocalScale: {x: 80, y: 0, z: 80}
   m_Children: []
@@ -6446,10 +6445,10 @@ MeshCollider:
   m_GameObject: {fileID: 1297460402}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
+  m_Convex: 0
+  m_CookingOptions: -1
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1297460405
 MeshRenderer:
@@ -6510,19 +6509,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ed33b3175ba44d9bb471e917e54df55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &1297460408
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1297460402}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 100, y: 100, z: 100}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!224 &1300843952
 RectTransform:
   m_ObjectHideFlags: 0
