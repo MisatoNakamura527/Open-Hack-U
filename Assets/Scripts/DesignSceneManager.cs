@@ -23,13 +23,13 @@ public class DesignSceneManager : MonoBehaviour
     [SerializeField] GameObject colorpanel;
     [SerializeField] ToggleGroup toggleGroup;
 
-    GameObject plane;
     // Texture texture;
     string nowbuttonname;
 
     public bool changepanel = false;
     public int a = 100;
 
+    GameObject pl;
     NailDesign nailDesign;
 
     // Start is called before the first frame update
@@ -50,6 +50,11 @@ public class DesignSceneManager : MonoBehaviour
         }
 
         changepanel = false;
+
+        var bg = GameObject.Find("BackGround");
+        var depl = bg.transform.Find("DesignPanel").gameObject;
+        var pl = depl.transform.Find("Plane").gameObject;
+        nailDesign = pl.GetComponent<NailDesign>();
 
         backButton.onClick.AddListener(() =>
        {
@@ -121,12 +126,58 @@ public class DesignSceneManager : MonoBehaviour
         colorpanel.SetActive(!true);
     }
 
+     private IEnumerable<Toggle> GetTogglesOf(ToggleGroup toggleGroup)
+    {
+        var toggles = GameObject.FindObjectsOfType<Toggle>();
+        Debug.Log(toggles.Length);
+        for(int i = 0; i < toggles.Length; i++) Debug.Log(i + " is " + toggles[i].name);
+        return toggles.Where(x => x.group == toggleGroup);
+    }
+
     public void ToolSelect(){
         // Toolpanelで選んだツールの名前を得る。
-        Toggle tg = toggleGroup.ActiveToggles().First();
-        string name = tg.name;
-        Debug.Log(name);
+        // Toggle tg = toggleGroup.ActiveToggles().FirstOrDefault();
+        Debug.Log(toggleGroup.AnyTogglesOn());
+        // string name = tg.name;
+        // // Debug.Log(name);
+        // var ietg = GetTogglesOf(toggleGroup);
+        // // if(ietg) Debug.Log(ietg.FirstOrDefault());
+
+        // string selectedLabel = toggleGroup.ActiveToggles()
+        //     .FirstOrDefault().GetComponentsInChildren<Text>()
+        //     .First(t => t.name == "Label").text;
+        // Debug.Log("selected " + selectedLabel);
+
     }
+
+    public void pen_small(){
+        nailDesign.brushtype = "pen";
+        nailDesign.brushSize = 1;
+    }
+    public void pen_normal(){
+        nailDesign.brushtype = "pen";
+        nailDesign.brushSize = 3;
+    }public void pen_big(){
+        nailDesign.brushtype = "pen";
+        nailDesign.brushSize = 5;
+    }
+    public void eraser_small(){
+        nailDesign.brushtype = "eraser";
+        nailDesign.brushSize = 1;
+    }
+    public void eraser_normal(){
+        nailDesign.brushtype = "eraser";
+        nailDesign.brushSize = 3;
+    }
+    public void eraser_big(){
+        nailDesign.brushtype = "eraser";
+        nailDesign.brushSize = 5;
+    }
+    public void fill(){
+        nailDesign.brushtype = "fill";
+        nailDesign.brushSize = 5;
+    }
+
 
     public void ColorSelect(){
         // Colorを選ぶ
