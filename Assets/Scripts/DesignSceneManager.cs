@@ -18,6 +18,8 @@ public class DesignSceneManager : MonoBehaviour
     [SerializeField] string tryscenename;
     [SerializeField] GameObject mainpanel;
     [SerializeField] GameObject designpanel;
+    [SerializeField] GameObject toolpanel;
+    [SerializeField] GameObject colorpanel;
 
     GameObject plane;
     // Texture texture;
@@ -31,6 +33,8 @@ public class DesignSceneManager : MonoBehaviour
     {
         mainpanel.SetActive(true);
         designpanel.SetActive(false);
+        toolpanel.SetActive(false);
+        colorpanel.SetActive(false);
 
         // 元の画像をコピー。それぞれのボタンのテクスチャにする。
         for(int i = 1; i <= 5; i++){
@@ -93,5 +97,24 @@ public class DesignSceneManager : MonoBehaviour
         GameObject.Find(nowbuttonname).GetComponent<Image>().sprite = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/Materials/"+nowbuttonname+".png");
         Debug.Log("new button image is "+GameObject.Find(nowbuttonname).GetComponent<Image>().sprite.name);
 
+    }
+
+    public void ChangeToolPanel(){
+        // toolボタンが押された時
+        designpanel.SetActive(false);
+        toolpanel.SetActive(true);
+    }
+
+    public void ChangeColorPanel(){
+        // colorボタンが押された時
+        designpanel.SetActive(false);
+        colorpanel.SetActive(true);
+    }
+    
+    public void BackDesignPanel(){
+        // ツール、カラーのとこからデザインのとこに戻る。
+        designpanel.SetActive(!false);
+        toolpanel.SetActive(!true);
+        colorpanel.SetActive(!true);
     }
 }

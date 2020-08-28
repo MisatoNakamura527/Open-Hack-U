@@ -2,6 +2,8 @@
 using System.Collections;
 using System.IO;
 
+using UnityEngine.UI;
+
 public class NailDesign : MonoBehaviour
 {
     Texture2D drawTexture;
@@ -16,15 +18,11 @@ public class NailDesign : MonoBehaviour
     public string color;
 
 
-
     void Start()
     {
 
         pl = GameObject.Find("BackGround");
         designSceneManager = pl.GetComponent<DesignSceneManager>();
-
-
-
     }
 
     public void DrawLine(Vector2 p, Vector2 q)
