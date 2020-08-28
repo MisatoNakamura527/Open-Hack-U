@@ -44,7 +44,6 @@ public class DesignSceneManager : MonoBehaviour
         for(int i = 1; i <= 5; i++){
             string new_path = "Assets/Materials/nail " + (i.ToString())+".png";
             AssetDatabase.CopyAsset("Assets/Materials/nail_plane.png", new_path);
-            // var tex = AssetDatabase.LoadAssetAtPath<Texture2D>(new_path);
             Sprite sp = AssetDatabase.LoadAssetAtPath<Sprite>(new_path);
             var b = GameObject.Find("nail " + i.ToString()).GetComponent<Image>();
             b.sprite = sp;
@@ -67,7 +66,7 @@ public class DesignSceneManager : MonoBehaviour
     }
 
     void Update(){
-        Debug.Log(changepanel);
+        // Debug.Log(changepanel);
     }
 
     void ChangeScene(){
@@ -84,7 +83,6 @@ public class DesignSceneManager : MonoBehaviour
     
         GameObject.Find("Plane").GetComponent<Renderer>().material.mainTexture = texture; 
         changepanel = true;
-        Debug.Log("set texture is " + GameObject.Find("Plane").GetComponent<Renderer>().material.mainTexture.name);
     }
 
     public void BackmainPanel(){    
@@ -92,7 +90,6 @@ public class DesignSceneManager : MonoBehaviour
         // 現在のPlaneのテクスチャをアセット内に保存
         Texture2D tex = (Texture2D)GameObject.Find("Plane").GetComponent<Renderer>().material.mainTexture;
         byte[] png = tex.EncodeToPNG();
-        // EditorUtility.SaveFilePanel("Save texture ", "", nowbuttonname+".png", "png");
         File.WriteAllBytes("Assets/Materials/"+nowbuttonname+".png", png);
 
         // 保存したテクスチャをボタンのテクスチャにする。
