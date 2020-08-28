@@ -12,6 +12,9 @@ public class NailDesign : MonoBehaviour
     GameObject pl;
     DesignSceneManager designSceneManager;
 
+    public int tool;
+    public string color;
+
 
 
     void Start()
