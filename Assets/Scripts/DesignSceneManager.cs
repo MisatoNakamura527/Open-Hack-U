@@ -105,7 +105,6 @@ public class DesignSceneManager : MonoBehaviour
 
     }
 
-<<<<<<< HEAD
     public void ChangeToolPanel(){
         // toolボタンが押された時
         designpanel.SetActive(false);
@@ -134,9 +133,5 @@ public class DesignSceneManager : MonoBehaviour
 
     public void ColorSelect(){
         // Colorを選ぶ
-=======
-    public void test(){
-        Debug.Log("testtest");
->>>>>>> parent of 0ab8da5... finish simpl designer
     }
 }
