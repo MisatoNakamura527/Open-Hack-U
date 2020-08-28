@@ -663,7 +663,7 @@ GameObject:
   - component: {fileID: 318178962}
   - component: {fileID: 318178961}
   m_Layer: 5
-  m_Name: nail 2
+  m_Name: nali 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1291,7 +1291,7 @@ GameObject:
   - component: {fileID: 457241485}
   - component: {fileID: 457241484}
   m_Layer: 5
-  m_Name: nail 5
+  m_Name: nali 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1981,7 +1981,7 @@ GameObject:
   - component: {fileID: 572259665}
   - component: {fileID: 572259664}
   m_Layer: 5
-  m_Name: nail 3
+  m_Name: nali 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3640,7 +3640,7 @@ GameObject:
   - component: {fileID: 763182008}
   - component: {fileID: 763182007}
   m_Layer: 5
-  m_Name: nail 1
+  m_Name: nali 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5538,11 +5538,10 @@ MonoBehaviour:
   tryscenename: 2.4 Try
   mainpanel: {fileID: 1923871360}
   designpanel: {fileID: 1789946998}
+  material: {fileID: 2100000, guid: 77e39474fa23945fb8c6faecc13fad4c, type: 2}
   toolpanel: {fileID: 775048457}
   colorpanel: {fileID: 396062420}
   toggleGroup: {fileID: 1366685441}
-  changepanel: 0
-  a: 1
 --- !u!1001 &1256048403
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8048,7 +8047,7 @@ GameObject:
   - component: {fileID: 1885988522}
   - component: {fileID: 1885988521}
   m_Layer: 5
-  m_Name: nail 4
+  m_Name: nali 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
