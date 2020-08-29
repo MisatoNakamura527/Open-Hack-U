@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
@@ -74,9 +75,11 @@ public class QRreader : MonoBehaviour
                 foreach (var item in list){
                     if(item["image"] != null){
                         Dictionary<string, string> dict = JsonConvert.DeserializeObject<Dictionary<string, string>>(item["image"].ToString());
+                        string name = item["name"].ToString();
                         string img_url = dict["small"];
                         // Debug.Log("<color=blue>img:" + img_url + "</color>");
-                        StartCoroutine("GetImage", img_url);
+                        // StartCoroutine("GetImage", img_url);
+                        StartCoroutine(GetImage(img_url, name));
                     }
                 }
             }
@@ -84,7 +87,7 @@ public class QRreader : MonoBehaviour
 
     }
 
-    IEnumerator GetImage(string img_url){
+    IEnumerator GetImage(string img_url, string img_name){
         UnityWebRequest www = UnityWebRequestTexture.GetTexture(img_url);
         yield return www.SendWebRequest();
 
@@ -93,8 +96,27 @@ public class QRreader : MonoBehaviour
         }else{
             //取得した画像のテクスチャをRawImageのテクスチャに張り付ける
             _image.texture = ((DownloadHandlerTexture)www.downloadHandler).texture;
+            //保存
+            Texture2D tex2 = TextureToTexture2D(_image.texture);
+            var png = tex2.EncodeToPNG();
+            File.WriteAllBytes("./Assets/Image/" + img_name + ".png", png );
         }
 
+    }
+
+    private Texture2D TextureToTexture2D(Texture texture){
+        Texture2D texture2D = new Texture2D(texture.width, texture.height, TextureFormat.RGBA32, false);
+        RenderTexture currentRT = RenderTexture.active;
+        RenderTexture renderTexture = RenderTexture.GetTemporary(texture.width, texture.height, 32);
+        Graphics.Blit(texture, renderTexture);
+
+        RenderTexture.active = renderTexture;
+        texture2D.ReadPixels(new UnityEngine.Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+        texture2D.Apply();
+
+        RenderTexture.active = currentRT;
+        RenderTexture.ReleaseTemporary(renderTexture);
+        return texture2D;
     }
 
 }
