@@ -9,19 +9,22 @@ public class NailDesign : MonoBehaviour
     bool touching = false;
     Vector2 prevPoint;
 
+    public int brushSize;
+    public string brushtype;
+    public string color_code;
+    static string erase = "#EBEBEB";
+
     GameObject pl;
     DesignSceneManager designSceneManager;
-
-
-
     void Start()
     {
 
         pl = GameObject.Find("BackGround");
         designSceneManager = pl.GetComponent<DesignSceneManager>();
 
-
-
+        brushSize = 3; // normal
+        brushtype =  "pen";
+        color_code = "#000000";
     }
 
     public void DrawLine(Vector2 p, Vector2 q)
@@ -39,8 +42,12 @@ public class NailDesign : MonoBehaviour
         p.x = (int)p.x;
         p.y = (int)p.y;
 
-        var brushSize = 5;
-        var color = Color.black;
+        Color color;
+        if(brushtype == "eraser") color_code = erase;
+        ColorUtility.TryParseHtmlString(color_code, out color); // 16進数から
+
+        Debug.Log("color is " + color + ", brushsize is " + brushSize);
+
         for (int x = Mathf.Max(0, (int)(p.x - brushSize-1)); x < Mathf.Min(drawTexture.width, (int)(p.x + brushSize+1)); x++)
         {
             for (int y = Mathf.Max(0, (int)(p.y - brushSize-1)); y < Mathf.Min(drawTexture.height, (int)(p.y + brushSize+1)); y++)
@@ -78,17 +85,28 @@ public class NailDesign : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 1500.0f))
+            // RaycastHit hit;
+
+            Plane plane = new Plane(Vector3.forward, 0);
+            // plane.Raycast(ray, out float enter);
+            // Debug.Log(enter);
+            if(plane.Raycast(ray, out float ent)){
+                Vector3 v3 = ray.GetPoint(ent);
+            }
+
+            // if (Physics.Raycast(ray, out hit, 1500.0f))
+            if(plane.Raycast(ray, out float enter))
             {
                 // タップにぶつかったらその場所を出力
-                Debug.Log(hit.collider.gameObject.transform.position);
-                var drawPoint = new Vector2(hit.textureCoord.x * drawTexture.width, hit.textureCoord.y * drawTexture.height);
+                // Debug.Log("hit position" + hit.collider.gameObject.transform.position);
+                // var drawPoint = new Vector2(hit.textureCoord.x * drawTexture.width, hit.textureCoord.y * drawTexture.height);
+
+                Vector3 v = ray.GetPoint(enter); // これは画面全体の座標。
+                var drawPoint = new Vector2(v.x-65, v.y-380);
+
                 if (touching) {
                     DrawLine(prevPoint, drawPoint);
-                }
-                else
-                {
+                }else{
                     Draw(drawPoint);
                 }
                 prevPoint = drawPoint;
@@ -96,13 +114,13 @@ public class NailDesign : MonoBehaviour
             }else
             {
                 touching = false;
-
             }
             drawTexture.SetPixels(buffer);
             drawTexture.Apply();
             GetComponent<Renderer>().material.mainTexture = drawTexture;
         }else
         {
+            Debug.Log("here");
             touching = false;
         }
     }
