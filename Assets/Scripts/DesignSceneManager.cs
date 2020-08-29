@@ -7,14 +7,14 @@ using UnityEngine.SceneManagement;
 using System.IO;
 using UnityEditor;
 using System.Linq;
+using System;
 
 public class DesignSceneManager : MonoBehaviour
 {
-    
     [SerializeField] Button backButton;
     [SerializeField] Button tryButton;
 
-    string nextscene;
+    [SerializeField] string nextscene;
     [SerializeField] string titlescenename;
     [SerializeField] string tryscenename;
     [SerializeField] GameObject mainpanel;
@@ -27,10 +27,13 @@ public class DesignSceneManager : MonoBehaviour
     string nowbuttonname;
 
     public bool changepanel = false;
-    public int a = 100;
 
     GameObject pl;
     NailDesign nailDesign;
+    static int max_color = 100; //最大100色
+
+    string[] color_codes;
+    Image[] images;
 
     // Start is called before the first frame update
     void Start()
@@ -55,6 +58,28 @@ public class DesignSceneManager : MonoBehaviour
         var depl = bg.transform.Find("DesignPanel").gameObject;
         var pl = depl.transform.Find("Plane").gameObject;
         nailDesign = pl.GetComponent<NailDesign>();
+
+        var cpl = bg.transform.Find("Color_select_panel"); 
+        Debug.Log(cpl.tag);
+        var scrv = cpl.transform.Find("Scroll View").gameObject;
+        Debug.Log(scrv.tag);
+        var v = scrv.transform.Find("Viewport").gameObject;
+        Debug.Log(v.tag);
+        var cont = v.transform.Find("Content").gameObject;
+        Debug.Log(cont.tag);
+
+        images = new Image[20];
+        
+        for(int i = 0; i < 20; i++){
+            images[i] = cont.transform.Find(i.ToString()).GetComponent<Image>();
+        }
+
+        color_codes = new string[max_color];
+
+        readcolorfile();
+        Debug.Log(images.Length);
+        Debug.Log(color_codes.Length);
+        SetcolorOnImage();
 
         backButton.onClick.AddListener(() =>
        {
@@ -118,6 +143,28 @@ public class DesignSceneManager : MonoBehaviour
         designpanel.SetActive(false);
         colorpanel.SetActive(true);
     }
+
+    void readcolorfile(){
+        // colorcodes.txt　に含まれているhexを1行ずつ読み取りcolor_codesに格納
+        System.IO.StreamReader fl = new System.IO.StreamReader("Assets/Scripts/colorcodes.txt");
+        string line;
+        int i = 0;
+        while((line = fl.ReadLine()) != null){
+            color_codes[i] = line;
+            i++;
+        }
+        fl.Close();
+    }
+
+    void SetcolorOnImage(){
+        // color_codesの色を色選択のところにセットしていく
+        int len = images.Length;
+        for(int i = 0; i < len; i++){
+            Color c;
+            ColorUtility.TryParseHtmlString(color_codes[i], out c);
+            images[i].color = c;
+        }
+    }
     
     public void BackDesignPanel(){
         // ツール、カラーのとこからデザインのとこに戻る。
@@ -178,8 +225,14 @@ public class DesignSceneManager : MonoBehaviour
         nailDesign.brushSize = 5;
     }
 
+    public int Selected_color_num(){    
+        Toggle toggle;
+        return Convert.ToInt32(toggle.name);
+    }
 
-    public void ColorSelect(){
+
+    public void ColorSelect(int num){
         // Colorを選ぶ
+        nailDesign.color_code = color_codes[num];
     }
 }
